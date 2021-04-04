@@ -49,6 +49,8 @@ import { setSelectedUser } from 'src/actions'
 import DataLayoutWraper from 'src/layouts/DataLayoutWraper';
 import qs from 'qs'
 import moment from 'moment'
+import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
+import PrintTemplate from './ReceiptTemplate'
 
 const useStyles = createStyles( theme => ({
     root: {
@@ -117,7 +119,10 @@ class Customer extends React.Component {
             selectedIndex: null,
             filters: null,
             policy_no: null,
+            amount: null,
+            narration: null,
             isLoadingVerify: false,
+            openPrint: false
         }
     }
     
@@ -218,7 +223,11 @@ class Customer extends React.Component {
     }
 
     handleMakePayment = ()=>{
-        makeRequest(this.props).post('/payment/add', qs.stringify({policy_no:this.state.policy_no}))
+        makeRequest(this.props).post('/payment/add', qs.stringify({
+            policy_no: this.state.policy_no,
+            amount: this.state.amount,
+            narration: this.state.narration
+        }))
         .then(response => {
             this.props.enqueueSnackbar(response.data.message, {variant: "success"});
             this.reload();
@@ -322,16 +331,40 @@ class Customer extends React.Component {
                                     variant="outlined"
                                     label="Policy No"
                                     name="policy_no"
-                                    value={this.props.policy_no}
+                                    value={this.state.policy_no}
                                     onChange={e => this.setState({policy_no:e.target.value})}
                                 />
                             </Grid>
                             {
                                 this.state.policy? (
-                                    <Box>
-                                        <Typography>Policy Name: {this.state.policy.policy.name}</Typography>
-                                        <Typography>Name:  {this.state.policy.customer.surname} {this.state.policy.customer.first_name} {this.state.policy.customer.other_name}</Typography>
-                                        <Typography>Premium: &#8358;{parseFloat(this.state.policy.premium).toLocaleString()}</Typography>
+                                    <Box width="100%">
+                                        <Typography style={{fontSize:12}}>Policy Name: {this.state.policy.policy.name}</Typography>
+                                        <Typography style={{fontSize:12}}>Name:  {this.state.policy.customer.surname} {this.state.policy.customer.first_name} {this.state.policy.customer.other_name}</Typography>
+                                        <Typography style={{fontSize:12}}>Premium: &#8358;{parseFloat(this.state.policy.premium).toLocaleString()}</Typography>
+
+                                        {
+                                            (this.state.policy.policy.type != "one-off") ? (
+                                                <TextField
+                                                    style={{marginTop:10, marginBottom:15}}
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    label="Amount"
+                                                    name="amount"
+                                                    value={this.state.amount}
+                                                    onChange={e => this.setState({amount:e.target.value})}
+                                                />
+                                            ) : (
+                                                null
+                                            )
+                                        }
+                                        <TextField
+                                            fullWidth
+                                            variant="outlined"
+                                            label="Payment Narration"
+                                            name="narration"
+                                            value={this.state.narration}
+                                            onChange={e => this.setState({narration:e.target.value})}
+                                        />
                                     </Box>
                                 ) : (
                                     null
@@ -378,6 +411,28 @@ class Customer extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                <Dialog open={this.state.openPrint} maxWidth="md" fullWidth onClose={e=>this.setState({openPrint:false})}>
+                    <DialogTitle>Print Receipt</DialogTitle>
+                    <DialogContent>
+                        {this.state.isLoadingPrint ? (
+                                <CircularProgress size={30}/>
+                            ) : (
+                                <PrintTemplate data={this.state.reservationData} ref={el => (this.componentRef = el)}/>
+                            ) 
+                        }
+                    </DialogContent>
+                    <DialogActions>
+                        <ReactToPrint content={() => this.componentRef}>
+                            <PrintContextConsumer>
+                                {({ handlePrint }) => (
+                                    <Button  onClick={handlePrint} variant="contained" color="primary">Print</Button>
+                                )}
+                            </PrintContextConsumer>
+                        </ReactToPrint>
+                    </DialogActions>
+                </Dialog>
+
                 <Container maxWidth={false}>
                     <Toolbar openDialog={()=>{this.setState({open:true})}} />
                     <Box mt={3}>
@@ -458,8 +513,9 @@ class Customer extends React.Component {
                                                 />
                                                 <IconMenuItem 
                                                     icon={<Refresh color="primary"/>} 
-                                                    text="Reverse"
-                                                    disabled={row.status!="completed"} 
+                                                    text="Print Receipt"
+                                                    disabled={row.status!="completed"}
+                                                    onClick={e=>this.setState({openPrint:true})} 
                                                 />
                                             </PopoverMenu>
                                         </TableCell>

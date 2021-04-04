@@ -65,7 +65,6 @@ class CreateCustomer extends React.Component{
         id_no: null,
         height: null,
         weight: null,
-        beneficiary: [{full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""}],
         agents: [],
         isLoading: false
     }
@@ -102,7 +101,6 @@ class CreateCustomer extends React.Component{
                     id_no: this.state.id_no,
                     height: this.state.height,
                     weight: this.state.weight,
-                    beneficiary: this.state.beneficiary
                 }))
                     .then(response => {
                         dialog.setViewCtrl("success")
@@ -168,24 +166,6 @@ class CreateCustomer extends React.Component{
     })
   }
 
-  onChangeText = (event, index) =>{
-      let rows = this.state.beneficiary
-      rows[index][event.target.name] = event.target.value
-      this.setState({beneficiary:rows});
-  }
-
-  ctrlBeneficiaryRow = (type) =>{
-    if(type == "add"){
-        let rows = this.state.beneficiary
-        rows.push({full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""})
-        this.setState({beneficiary:rows});
-    }
-    else{
-        let rows = this.state.beneficiary
-        rows.pop()
-        this.setState({beneficiary:rows});
-    }
-  }
   render(){
     return(
       <Page
@@ -398,73 +378,6 @@ class CreateCustomer extends React.Component{
                             />
                         </Grid>
                     </Grid>
-                    <Typography style={{marginTop: 25}}>Beneficiaries</Typography>
-                    <Divider/>
-                    {
-                        this.state.beneficiary.map((list, index)=>(
-                            <Grid container spacing={2} style={{marginTop: 20}}>
-                                <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        label="Full Name"
-                                        name="full_name"
-                                        value={this.state.beneficiary[index].full_name}
-                                        onChange={e => this.onChangeText(e,index)}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        label="Date Of Birth"
-                                        name="date_of_birth"
-                                        type="date"
-                                        value={this.state.beneficiary[index].date_of_birth}
-                                        onChange={e => this.onChangeText(e,index)}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        label="Relationship"
-                                        name="relationship"
-                                        value={this.state.beneficiary[index].relationship}
-                                        onChange={e => this.onChangeText(e,index)}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        label="Phone Number"
-                                        name="phone_number"
-                                        value={this.state.beneficiary[index].phone_number}
-                                        onChange={e => this.onChangeText(e,index)}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        label="PPN(%)"
-                                        name="ppn"
-                                        value={this.state.beneficiary[index].ppn}
-                                        onChange={e => this.onChangeText(e,index)}
-                                    />
-                                </Grid>
-                            </Grid>
-                        ))
-                    }
-                    <Box display="flex" flexDirection="row" justifyContent="space-between">
-                        <IconButton color="primary" onClick={e=>this.ctrlBeneficiaryRow("remove")}>
-                            <Remove/>
-                        </IconButton>
-                        <IconButton color="primary" onClick={e=>this.ctrlBeneficiaryRow("add")}>
-                            <Add/>
-                        </IconButton>
-                    </Box>
                 </CardContent>
                 <CardActions>
                    <Button disableElevation disabled={this.state.agents < 1}  variant="contained" color="primary" onClick={this.handleCreateCustomer}>Register Customer</Button>

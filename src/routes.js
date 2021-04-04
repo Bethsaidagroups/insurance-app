@@ -13,6 +13,7 @@ import EditCustomerView from 'src/views/Customer/EditCustomer'
 import RegisterCustomerView from 'src/views/Customer/RegisterCustomer'
 import PolicyView from "src/views/Policy"
 import AddPolicyView from "src/views/Policy/AddPolicy"
+import EditPolicyView from "src/views/Policy/EditPolicy"
 import PaymentView from "src/views/Payment"
 
 
@@ -29,6 +30,7 @@ const routes = [
       { path: 'register-customer', element: <RegisterCustomerView /> },
       { path: 'edit-customer/:id', element: <EditCustomerView /> },
       { path: 'policies', element: <PolicyView /> },
+      { path: 'edit-policy/:id', element: <EditPolicyView /> },
       { path: 'add-policy', element: <AddPolicyView /> },
       { path: 'payments', element: <PaymentView /> },
       { path: '*', element: <Navigate replace={false} to="/404" /> }

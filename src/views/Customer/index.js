@@ -281,7 +281,7 @@ class Customer extends React.Component {
                                                 <IconMenuItem 
                                                     icon={<EditIcon color="primary"/>} 
                                                     text="View/Edit" 
-                                                    onClick={evt => this.setState({selectedStaff:row, open:true})}
+                                                    onClick={evt => this.props.navigate("/app/edit-customer/"+row.id)}
                                                 />
                                                 <IconMenuItem 
                                                     icon={<PersonAdd color="primary"/>} 

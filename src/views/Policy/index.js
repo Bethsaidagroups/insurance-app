@@ -275,7 +275,7 @@ class Policy extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {row.period} Days
+                                                {row.period > 1 ? `${row.period} Years` : `${row.period} Year`}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
@@ -293,6 +293,7 @@ class Policy extends React.Component {
                                                 <IconMenuItem 
                                                     icon={<EditIcon color="primary"/>} 
                                                     text="View/Edit" 
+                                                    onClick={e=>this.props.navigate("/app/edit-policy/"+row.id)}
                                                 />
                                                 <IconMenuItem 
                                                     icon={<PersonAdd color="primary"/>} 

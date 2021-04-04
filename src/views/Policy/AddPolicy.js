@@ -14,7 +14,8 @@ import {
   CardActions,
   Typography,
   TextField,
-  MenuItem
+  MenuItem,
+  IconButton
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import Toolbar from './Toolbar';
@@ -27,7 +28,7 @@ import {makeRequest, handleError} from 'src/utils/axios-helper';
 import { withPermission, useRouter } from 'src/utils';
 import qs from 'qs'
 import Agent from '../Agent';
-import { Field } from 'formik';
+import { Add, Remove } from '@material-ui/icons';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -53,6 +54,7 @@ class AddPolicy extends React.Component{
         premium: null,
         period: null,
         start_date: null,
+        beneficiary: [{full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""}],
         policies: [],
         customers: [],
         selectedPolicyIndex: null,
@@ -79,6 +81,7 @@ class AddPolicy extends React.Component{
                 premium: this.state.premium,
                 period: this.state.period,
                 start_date: this.state.start_date,
+                beneficiary: this.state.beneficiary
             }))
                 .then(response => {
                     dialog.setViewCtrl("success")
@@ -116,7 +119,8 @@ class AddPolicy extends React.Component{
         email: "",
         position: "",
         password: "",
-        password_verify: ""
+        password_verify: "",
+        beneficiary: [{full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""}],
       })
   }
 
@@ -172,6 +176,27 @@ class AddPolicy extends React.Component{
           policy: this.state.policies[event.target.value].id
         })
   }
+
+onChangeText = (event, index) =>{
+    let rows = this.state.beneficiary
+    rows[index][event.target.name] = event.target.value
+    this.setState({beneficiary:rows});
+}
+
+ctrlBeneficiaryRow = (type) =>{
+  if(type == "add"){
+      let rows = this.state.beneficiary
+      rows.push({full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""})
+      this.setState({beneficiary:rows});
+  }
+  else{
+      if(this.state.beneficiary.length > 1){
+        let rows = this.state.beneficiary
+        rows.pop()
+        this.setState({beneficiary:rows});
+      }
+  }
+}
 
   render(){
     return(
@@ -259,8 +284,14 @@ class AddPolicy extends React.Component{
                                 name="period"
                                 value={this.state.period}
                                 onChange={e => this.setState({period:e.target.value})}
-                                helperText="Period in number days"
-                            />
+                                select
+                            >
+                                <MenuItem value="1">1 Year</MenuItem>
+                                <MenuItem value="2">2 Years</MenuItem>
+                                <MenuItem value="3">3 Years</MenuItem>
+                                <MenuItem value="4">4 Years</MenuItem>
+                                <MenuItem value="5">5 Years</MenuItem>
+                            </TextField>
                         </Grid>
 
                         {
@@ -283,6 +314,73 @@ class AddPolicy extends React.Component{
                             )
                         }
                     </Grid>
+                    <Typography style={{marginTop: 25}}>Beneficiaries</Typography>
+                    <Divider/>
+                    {
+                        this.state.beneficiary.map((list, index)=>(
+                            <Grid container spacing={2} style={{marginTop: 20}}>
+                                <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+                                    <TextField
+                                        fullWidth
+                                        variant="outlined"
+                                        label="Full Name"
+                                        name="full_name"
+                                        value={this.state.beneficiary[index].full_name}
+                                        onChange={e => this.onChangeText(e,index)}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
+                                    <TextField
+                                        fullWidth
+                                        variant="outlined"
+                                        label="Date Of Birth"
+                                        name="date_of_birth"
+                                        type="date"
+                                        value={this.state.beneficiary[index].date_of_birth}
+                                        onChange={e => this.onChangeText(e,index)}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
+                                    <TextField
+                                        fullWidth
+                                        variant="outlined"
+                                        label="Relationship"
+                                        name="relationship"
+                                        value={this.state.beneficiary[index].relationship}
+                                        onChange={e => this.onChangeText(e,index)}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+                                    <TextField
+                                        fullWidth
+                                        variant="outlined"
+                                        label="Phone Number"
+                                        name="phone_number"
+                                        value={this.state.beneficiary[index].phone_number}
+                                        onChange={e => this.onChangeText(e,index)}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
+                                    <TextField
+                                        fullWidth
+                                        variant="outlined"
+                                        label="PPN(%)"
+                                        name="ppn"
+                                        value={this.state.beneficiary[index].ppn}
+                                        onChange={e => this.onChangeText(e,index)}
+                                    />
+                                </Grid>
+                            </Grid>
+                        ))
+                    }
+                    <Box display="flex" flexDirection="row" justifyContent="space-between">
+                        <IconButton color="primary" onClick={e=>this.ctrlBeneficiaryRow("remove")}>
+                            <Remove/>
+                        </IconButton>
+                        <IconButton color="primary" onClick={e=>this.ctrlBeneficiaryRow("add")}>
+                            <Add/>
+                        </IconButton>
+                    </Box>
                 </CardContent>
                 <CardActions>
                    <Button disableElevation disabled={this.state.agents < 1}  variant="contained" color="primary" onClick={this.handleAddPolicy}>Add Policy</Button>
