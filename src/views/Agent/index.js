@@ -253,16 +253,6 @@ class Agent extends React.Component {
                                         <TableCell align="center">
                                             <PopoverMenu>
                                                 <IconMenuItem 
-                                                    icon={<EditIcon color="primary"/>} 
-                                                    text="View Policies" 
-                                                    onClick={evt => this.setState({selectedStaff:row, open:true})}
-                                                />
-                                                <IconMenuItem 
-                                                    icon={<EditIcon color="primary"/>} 
-                                                    text="View Customers" 
-                                                    onClick={evt => this.setState({selectedStaff:row, open:true})}
-                                                />
-                                                <IconMenuItem 
                                                     icon={<Remove color="primary"/>} 
                                                     text="Remove Agent" 
                                                     onClick={evt => this.setState({selectedStaff:row, open:true})}

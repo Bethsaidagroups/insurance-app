@@ -17,7 +17,9 @@ import { Edit as EditIcon,
     Settings,
     Person,
     PersonAdd,
-    Print
+    Print,
+    Commute,
+    Delete
 } from '@material-ui/icons'
 import { 
     TableRow,
@@ -28,9 +30,12 @@ import {
     Typography,
     Box,
     Container,
+    Button,
     Dialog,
     DialogTitle,
     DialogContent,
+    DialogActions,
+    CircularProgress
 } from '@material-ui/core';
 import { deepOrange } from '@material-ui/core/colors';
 import { withSnackbar } from 'notistack';
@@ -42,6 +47,8 @@ import { setSelectedUser } from 'src/actions'
 import DataLayoutWraper from 'src/layouts/DataLayoutWraper';
 import qs from 'qs'
 import moment from 'moment'
+import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
+import PrintTemplate from './SchedulePrintTemplate'
 
 const useStyles = createStyles( theme => ({
     root: {
@@ -107,7 +114,10 @@ class Policy extends React.Component {
             open: false,
             selectedStaff: null,
             selectedIndex: null,
-            filters: null
+            filters: null,
+            openPrint: false,
+            isLoadingPrint: false,
+            policyData:null
         }
     }
     
@@ -225,12 +235,53 @@ class Policy extends React.Component {
         })
     }
 
+    printSchedule = (policy_no) => {
+        this.setState({openPrint:true, isLoadingPrint:true})
+        makeRequest(this.props).post('/policy/get', qs.stringify({policy_no:policy_no}))
+        .then(response => {
+            this.setState({policyData:response.data.data.list, isLoadingPrint:false})
+        })
+        .catch(error => {
+            handleError({
+                error: error,
+                callbacks: {
+                400: response=>{ this.props.enqueueSnackbar(response.data.message, {variant: "error"}); }
+                }
+            }, this.props);
+        })
+        .finally(() => {
+            //Do nothing
+        })
+    }
+
     render(){
         return(
             <Page
                 className={this.props.classes.root}
                 title="Customers"
                 >
+
+                <Dialog open={this.state.openPrint} maxWidth="md" fullWidth onClose={e=>this.setState({openPrint:false})}>
+                    <DialogTitle>Print Shedule</DialogTitle>
+                    <DialogContent>
+                        {this.state.isLoadingPrint ? (
+                                <CircularProgress size={30}/>
+                            ) : (
+                                <PrintTemplate data={this.state.policyData} ref={el => (this.componentRef = el)}/>
+                            ) 
+                        }
+                    </DialogContent>
+                    <DialogActions>
+                        <ReactToPrint content={() => this.componentRef}>
+                            <PrintContextConsumer>
+                                {({ handlePrint }) => (
+                                    <Button  onClick={handlePrint} variant="contained" color="primary">Print</Button>
+                                )}
+                            </PrintContextConsumer>
+                        </ReactToPrint>
+                    </DialogActions>
+                </Dialog>
+
                 <Container maxWidth={false}>
                     <Toolbar />
                     <Box mt={3}>
@@ -296,16 +347,14 @@ class Policy extends React.Component {
                                                     onClick={e=>this.props.navigate("/app/edit-policy/"+row.id)}
                                                 />
                                                 <IconMenuItem 
-                                                    icon={<PersonAdd color="primary"/>} 
-                                                    text="Add Payment" 
-                                                />
-                                                <IconMenuItem 
-                                                    icon={<PersonAdd color="primary"/>} 
+                                                    icon={<Delete color="primary"/>} 
                                                     text="Delete" 
+                                                    disabled
                                                 />
                                                 <IconMenuItem 
                                                     icon={<Print color="primary"/>} 
                                                     text="Print Schedule" 
+                                                    onClick={e=>this.printSchedule(row.policy_no)}
                                                 />
                                             </PopoverMenu>
                                         </TableCell>

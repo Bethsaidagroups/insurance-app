@@ -95,7 +95,7 @@ class ReceiptPrintTemplate extends Component
 
     render(){
         return(
-            <Container style={{width: "17cm", padding:10, borderStyle: "solid", borderWidth: 1, borderRadius: 5}}>
+            <Container style={{width: "17cm", marginTop:30, padding:10}}>
                 <Box display="flex" flexDirection="row" justifyContent="space-between">
                     <Box>
                         <Avatar
@@ -117,48 +117,52 @@ class ReceiptPrintTemplate extends Component
                     <Box style={{marginTop: 20}}>
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>Receive with thanks from: </Typography>
-                            <Typography className={this.props.classes.text}>Akosile Opeyemi Samuel</Typography>
+                            <Typography className={this.props.classes.text}>
+                                {`${this.props.data.details.customer.surname} ${this.props.data.details.customer.first_name} ${this.props.data.details.customer.other_name}`}
+                            </Typography>
                         </Box>
 
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>Policy/Item: </Typography>
-                            <Typography className={this.props.classes.text}>ISP/676787/JSH</Typography>
+                            <Typography className={this.props.classes.text}>{this.props.data.details.policy_no}</Typography>
                         </Box>
 
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>Date: </Typography>
-                            <Typography className={this.props.classes.text}>January 12, 2021</Typography>
+                            <Typography className={this.props.classes.text}>{moment(this.props.data.details.datetime).format("Do MMMM, YYYY")}</Typography>
                         </Box>
                     </Box>
                 </Box>
                 <Divider style={{marginTop:10, marginBottom:10}}/>
-                <Typography variant="h6" component="h6" style={{textAlign:"center"}}>Official Receipt (No: R6788-J78)</Typography>
+                <Typography variant="h6" component="h6" style={{textAlign:"center"}}>Official Receipt ({this.props.data.details.reference})</Typography>
                 <Divider style={{marginTop:10, marginBottom:10}}/>
                 <Box>
                     <Box spacing={2} style={{marginTop: 20}}>
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>Agency/Source: </Typography>
-                            <Typography className={this.props.classes.text1}>Dave Hope - BMG/4061</Typography>
+                            <Typography className={this.props.classes.text1}>{`${this.props.data.agent.first_name} ${this.props.data.agent.last_name} - ${this.props.data.agent.agent_code}`}</Typography>
                         </Box>
 
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>The Sum of: </Typography>
-                            <Typography className={this.props.classes.text1}>&#8358;25,000.00 Naira</Typography>
+                            <Typography className={this.props.classes.text1}>&#8358;{parseFloat(this.props.data.details.amount).toLocaleString()} Naira Only</Typography>
                         </Box>
 
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>Payment in Respect of: </Typography>
-                            <Typography className={this.props.classes.text1}>Premium Received (Pol. ISP/676787/JSH)</Typography>
+                            <Typography className={this.props.classes.text1}>Premium Received (Pol. {this.props.data.details.policy_no})</Typography>
                         </Box>
 
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>Cash/Cheque/Narration: </Typography>
-                            <Typography className={this.props.classes.text1}>cash, Payment with reference - 8937930028</Typography>
+                            <Typography className={this.props.classes.text1}>{this.props.data.details.narration}</Typography>
                         </Box>
 
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>Teller No: </Typography>
-                            <Typography className={this.props.classes.text1}>Akosile Opeyemi</Typography>
+                            <Typography className={this.props.classes.text1}>
+                            {`${this.props.data.details.customer.surname} ${this.props.data.details.customer.first_name} ${this.props.data.details.customer.other_name}`}
+                            </Typography>
                         </Box>
                     </Box>
                 </Box>

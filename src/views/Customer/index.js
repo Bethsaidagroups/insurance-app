@@ -223,6 +223,37 @@ class Customer extends React.Component {
         })
     }
 
+    seekAgentName = async (staff_id)=>{
+        let use_var = null
+        makeRequest(this.props).get('/agent/name/'+staff_id)
+        .then(response => {
+            user_var = response.data.data.name
+        })
+        .catch(error => {
+            handleError({
+                error: error,
+                callbacks: {
+                    400: response=>{ 
+                        //Do Nothing
+                    },
+                    401: response=>{ 
+                        //Do Nothing
+                    },
+                    403: response=>{ 
+                        //Do Nothing
+                    },
+                    500: response=>{ 
+                        //Do Nothing
+                    },
+                    "request": response=>{ 
+                        //Do Nothing
+                    }
+                }
+            }, this.props);
+        })
+        alert(use_var);
+    }
+
     render(){
         return(
             <Page
@@ -263,7 +294,7 @@ class Customer extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {row.agent.first_name} {row.agent.last_name} ({row.agent.username})
+                                                {this.seekAgentName(row.agent.staff_id)} ({row.agent.agent_code})
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
@@ -282,16 +313,6 @@ class Customer extends React.Component {
                                                     icon={<EditIcon color="primary"/>} 
                                                     text="View/Edit" 
                                                     onClick={evt => this.props.navigate("/app/edit-customer/"+row.id)}
-                                                />
-                                                <IconMenuItem 
-                                                    icon={<PersonAdd color="primary"/>} 
-                                                    text="View Policies" 
-                                                    onClick={evt =>this.handleAddToAgent(row)}
-                                                />
-                                                <IconMenuItem 
-                                                    icon={<PersonAdd color="primary"/>} 
-                                                    text="Add Policy" 
-                                                    onClick={evt =>this.handleAddToAgent(row)}
                                                 />
                                             </PopoverMenu>
                                         </TableCell>

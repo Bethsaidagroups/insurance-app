@@ -122,7 +122,11 @@ class Customer extends React.Component {
             amount: null,
             narration: null,
             isLoadingVerify: false,
-            openPrint: false
+            isLoadingPayment: false,
+            isLoadingAction: false,
+            openPrint: false,
+            isLoadingPrint: true,
+            receiptData: null
         }
     }
     
@@ -223,6 +227,7 @@ class Customer extends React.Component {
     }
 
     handleMakePayment = ()=>{
+        this.setState({isLoadingPayment:true});
         makeRequest(this.props).post('/payment/add', qs.stringify({
             policy_no: this.state.policy_no,
             amount: this.state.amount,
@@ -242,7 +247,7 @@ class Customer extends React.Component {
             }, this.props);
         })
         .finally(() => {
-            //Do nothing
+            this.setState({isLoadingPayment:false});
         })
     }
 
@@ -267,6 +272,7 @@ class Customer extends React.Component {
     }
 
     approvePayment = (reference)=>{
+        this.setState({isLoadingAction:true});
         makeRequest(this.props).get('/payment/approve/'+reference)
         .then(response => {
             this.props.enqueueSnackbar(response.data.message, {variant: "success"});
@@ -282,10 +288,12 @@ class Customer extends React.Component {
         })
         .finally(() => {
             //Do nothing
+            this.setState({isLoadingAction:false});
         })
     }
 
     deletePayment = (reference)=>{
+        this.setState({isLoadingAction:true});
         makeRequest(this.props).get('/payment/delete/'+reference)
         .then(response => {
             this.props.enqueueSnackbar(response.data.message, {variant: "success"});
@@ -301,9 +309,28 @@ class Customer extends React.Component {
         })
         .finally(() => {
             //Do nothing
+            this.setState({isLoadingAction:false});
         })
     }
 
+    printReceipt = (reference) => {
+        this.setState({openPrint:true, isLoadingPrint:true})
+        makeRequest(this.props).get('/payment/receipt/'+reference)
+        .then(response => {
+            this.setState({receiptData:response.data.data, isLoadingPrint:false})
+        })
+        .catch(error => {
+            handleError({
+                error: error,
+                callbacks: {
+                400: response=>{ this.props.enqueueSnackbar(response.data.message, {variant: "error"}); }
+                }
+            }, this.props);
+        })
+        .finally(() => {
+            //Do nothing
+        })
+    }
 
 
     render(){
@@ -381,6 +408,7 @@ class Customer extends React.Component {
                                             variant="contained"
                                             color="primary"
                                             disableElevation
+                                            disabled={this.state.policy}
                                         >
                                             Verify
                                         </Button>
@@ -391,24 +419,33 @@ class Customer extends React.Component {
                     </DialogContent>
                     <Divider style={{marginTop:15,marginBottom:5}}/>
                     <DialogActions>
-                        <Button  
-                            className={this.props.classes.buttonCancel} 
-                            onClick={()=>this.setState({open:false, policy:null})}
-                            variant="outlined"
-                            disableElevation
-                        >
-                            Cancel
-                        </Button>
-                        <Button  
-                            style={{marginLeft:10}}
-                            onClick={this.handleMakePayment}
-                            variant="contained"
-                            color="primary"
-                            disableElevation
-                            disabled={!this.state.policy}
-                        >
-                            Make Payment
-                        </Button>
+                        {
+                            this.state.isLoadingPayment ? (
+                                <CircularProgress/>
+                            ) : (
+                                <>
+                                    <Button  
+                                        className={this.props.classes.buttonCancel} 
+                                        onClick={()=>this.setState({open:false, policy:null, policy_no:""})}
+                                        variant="outlined"
+                                        disableElevation
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button  
+                                        style={{marginLeft:10}}
+                                        onClick={this.handleMakePayment}
+                                        variant="contained"
+                                        color="primary"
+                                        disableElevation
+                                        disabled={!this.state.policy}
+                                    >
+                                        Make Payment
+                                    </Button>
+                                </>
+                            )
+                        }
+                        
                     </DialogActions>
                 </Dialog>
 
@@ -418,7 +455,7 @@ class Customer extends React.Component {
                         {this.state.isLoadingPrint ? (
                                 <CircularProgress size={30}/>
                             ) : (
-                                <PrintTemplate data={this.state.reservationData} ref={el => (this.componentRef = el)}/>
+                                <PrintTemplate data={this.state.receiptData} ref={el => (this.componentRef = el)}/>
                             ) 
                         }
                     </DialogContent>
@@ -479,12 +516,12 @@ class Customer extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {row.initialized_by.first_name} {row.initialized_by.last_name}
+                                                {row.initialized_by.init_first_name} {row.initialized_by.init_last_name}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {row.approved_by.first_name} {row.approved_by.last_name}
+                                                {row.approved_by.appd_first_name} {row.approved_by.appd_last_name}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
@@ -499,24 +536,33 @@ class Customer extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <PopoverMenu>
-                                                <IconMenuItem 
-                                                    icon={<CheckIcon color="primary"/>} 
-                                                    text="Approve" 
-                                                    disabled={row.status!="pending"}
-                                                    onClick={evt => this.approvePayment(row.reference)}
-                                                />
-                                                <IconMenuItem 
-                                                    icon={<Delete color="primary"/>} 
-                                                    text="Delete"
-                                                    disabled={row.status!="pending"} 
-                                                    onClick={evt => this.deletePayment(row.reference)}
-                                                />
-                                                <IconMenuItem 
-                                                    icon={<Refresh color="primary"/>} 
-                                                    text="Print Receipt"
-                                                    disabled={row.status!="completed"}
-                                                    onClick={e=>this.setState({openPrint:true})} 
-                                                />
+                                                {
+                                                    this.state.isLoadingAction ? (
+                                                        <CircularProgress size={20}/>
+                                                    ) : (
+                                                        <>
+                                                            <IconMenuItem 
+                                                                icon={<CheckIcon color="primary"/>} 
+                                                                text="Approve" 
+                                                                disabled={row.status!="pending"}
+                                                                onClick={evt => this.approvePayment(row.reference)}
+                                                            />
+                                                            <IconMenuItem 
+                                                                icon={<Delete color="primary"/>} 
+                                                                text="Delete"
+                                                                disabled={row.status!="pending"} 
+                                                                onClick={evt => this.deletePayment(row.reference)}
+                                                            />
+                                                            <IconMenuItem 
+                                                                icon={<Refresh color="primary"/>} 
+                                                                text="Print Receipt"
+                                                                disabled={row.status!="completed"}
+                                                                onClick={e=>this.printReceipt(row.reference)} 
+                                                            />
+                                                        </>
+                                                    )
+                                                }
+                                                
                                             </PopoverMenu>
                                         </TableCell>
                                     </TableRow>

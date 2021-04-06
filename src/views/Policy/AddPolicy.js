@@ -50,9 +50,9 @@ class AddPolicy extends React.Component{
     this.state = {
         policy: null,
         customer: null,
-        sum_assured: null,
+        sum_assured: 0,
         premium: null,
-        period: null,
+        period: 1,
         start_date: null,
         beneficiary: [{full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""}],
         policies: [],
@@ -69,7 +69,7 @@ class AddPolicy extends React.Component{
         description: "Make sure you have confirmed the details before you proceed from here",
         close: dialog =>{
             if(dialog.viewCtrl == "success"){
-                //this.clearFields()
+                this.clearFields()
             }
             dialog.close()
         },
@@ -112,14 +112,12 @@ class AddPolicy extends React.Component{
 
   clearFields = () =>{
       this.setState({
-        username: "",
-        first_name: "",
-        last_name: "",
-        gender: "",
-        email: "",
-        position: "",
-        password: "",
-        password_verify: "",
+        policy: "",
+        customer: "",
+        sum_assured: 0,
+        premium: "",
+        period: 1,
+        start_date: "",
         beneficiary: [{full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""}],
       })
   }
@@ -173,9 +171,26 @@ class AddPolicy extends React.Component{
       this.setState({
           selectedPolicy: this.state.policies[event.target.value], 
           selectedPolicyIndex: event.target.value,
-          policy: this.state.policies[event.target.value].id
+          policy: this.state.policies[event.target.value].id,
         })
   }
+onChange = (event) =>{
+    if(this.state.selectedPolicy && (this.state.selectedPolicy.var_name != "bta")){
+        if(event.target.name == "premium"){
+            this.setState({sum_assured: parseFloat(this.state.period) * 12 * parseFloat(event.target.value)})
+        }
+        else if(event.target.name == "period"){
+            this.setState({sum_assured: parseFloat(event.target.value) * 12 * parseFloat(this.state.premium)})
+        }
+        else{
+            this.setState({[event.target.name]:event.target.value})
+        }
+        this.setState({[event.target.name]:event.target.value})
+    }
+    else{
+        this.setState({[event.target.name]:event.target.value})
+    }
+}
 
 onChangeText = (event, index) =>{
     let rows = this.state.beneficiary
@@ -222,7 +237,7 @@ ctrlBeneficiaryRow = (type) =>{
                                 label="Customer"
                                 name="customer"
                                 value={this.state.customer}
-                                onChange={e => this.setState({customer:e.target.value})}
+                                onChange={this.onChange}
                                 select
                                 disabled={this.state.customers < 1}
                             >
@@ -260,7 +275,7 @@ ctrlBeneficiaryRow = (type) =>{
                                 label="Premium"
                                 name="premium"
                                 value={this.state.premium}
-                                onChange={e => this.setState({premium:e.target.value})}
+                                onChange={this.onChange}
                             />
                         </Grid>
 
@@ -272,7 +287,7 @@ ctrlBeneficiaryRow = (type) =>{
                                 name="start_date"
                                 type="date"
                                 value={this.state.start_date}
-                                onChange={e => this.setState({start_date:e.target.value})}
+                                onChange={this.onChange}
                             />
                         </Grid>
 
@@ -283,7 +298,7 @@ ctrlBeneficiaryRow = (type) =>{
                                 label="Period"
                                 name="period"
                                 value={this.state.period}
-                                onChange={e => this.setState({period:e.target.value})}
+                                onChange={this.onChange}
                                 select
                             >
                                 <MenuItem value="1">1 Year</MenuItem>
@@ -305,7 +320,8 @@ ctrlBeneficiaryRow = (type) =>{
                                             name={field.var_name}
                                             value={this.state[field.var_name]}
                                             type={field.type}
-                                            onChange={e => this.setState({[field.var_name]:e.target.value})}
+                                            onChange={this.onChange}
+                                            disabled={this.state.selectedPolicy ? this.state.selectedPolicy.var_name != "bta" : false}
                                         />
                                     </Grid>
                                 ))
