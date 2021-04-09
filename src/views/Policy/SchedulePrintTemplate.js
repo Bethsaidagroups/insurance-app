@@ -113,7 +113,7 @@ class ReceiptPrintTemplate extends Component
                         <Typography style={{color:red[600]}} variant="h2" component="h2">Bethsaida Micro Insurance Limited</Typography>
                         <Typography style={{color:grey[600], fontSize:13}}>Bethsaida Place, 31, Afolabi Aina Street, (Royal Bed Estate)</Typography>
                         <Typography style={{color:grey[600], fontSize:13}}>off Allen Avenue, before new Alade Market, Ikeja Lagos State</Typography>
-                        <Typography style={{color:grey[600], fontSize:13}}>Tel: 07065551148</Typography>
+                        <Typography style={{color:grey[600], fontSize:13}}>Tel: 08053645100</Typography>
                         <Typography style={{color:grey[600], fontSize:13}}>Email: info@bethsaidainsltd.com</Typography>
                     </Box>
                 </Box>
@@ -222,6 +222,15 @@ class ReceiptPrintTemplate extends Component
                                     </td>
                                     <td className={this.props.classes.td} colSpan={3}>
                                         {moment(this.props.data.start_date).add(parseInt(this.props.data.period),"years").format("MMMM Do YYYY")}
+                                    </td>
+                                </tr>
+
+                                <tr style={{minHeight: 60}}>
+                                    <td className={this.props.classes.td} style={{width: "50%"}}>
+                                        CHECKED BY: <strong>{this.props.data.staff.staff_first_name} {this.props.data.staff.staff_last_name}</strong>
+                                    </td>
+                                    <td className={this.props.classes.td} colSpan={3}>
+                                        DATE: <strong>{moment(this.props.data.date_added).format("MMMM Do YYYY")}</strong>
                                     </td>
                                 </tr>
                             </table>
@@ -337,6 +346,15 @@ class ReceiptPrintTemplate extends Component
                                 <tr style={{minHeight: 60}}>
                                     <td className={this.props.classes.td} colSpan={4} style={{width: "100%"}}>
                                         SEE GENERAL CONDITIONS
+                                    </td>
+                                </tr>
+
+                                <tr style={{minHeight: 60}}>
+                                    <td className={this.props.classes.td} style={{width: "50%"}}>
+                                        CHECKED BY: <strong>{this.props.data.staff.staff_first_name} {this.props.data.staff.staff_last_name}</strong>
+                                    </td>
+                                    <td className={this.props.classes.td} colSpan={3}>
+                                        DATE: <strong>{moment(this.props.data.date_added).format("MMMM Do YYYY")}</strong>
                                     </td>
                                 </tr>
                             </table>

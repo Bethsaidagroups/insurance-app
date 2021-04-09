@@ -294,12 +294,12 @@ class Customer extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {this.seekAgentName(row.agent.staff_id)} ({row.agent.agent_code})
+                                                {row.agent.name} ({row.agent.agent_code})
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                ----
+                                                {row.active_policy}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">

@@ -65,7 +65,7 @@ class UpdatePassword extends React.Component{
                 confirm: dialog =>{
                     makeRequest(this.props).post('/auth/pwd-change',qs.stringify({
                         password: this.state.password,
-                        password_verify: this.state.password_verify
+                        retype_password: this.state.password_verify
                     }))
                         .then(response => {
                             dialog.setViewCtrl("success")

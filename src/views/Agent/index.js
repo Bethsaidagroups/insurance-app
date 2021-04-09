@@ -242,12 +242,12 @@ class Agent extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                ----
+                                                {row.customers}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                ----
+                                                {row.active_policy}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">

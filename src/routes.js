@@ -15,6 +15,7 @@ import PolicyView from "src/views/Policy"
 import AddPolicyView from "src/views/Policy/AddPolicy"
 import EditPolicyView from "src/views/Policy/EditPolicy"
 import PaymentView from "src/views/Payment"
+import UpdatePasswordVeiw from "src/views/Staff/UpdatePassword"
 
 
 const routes = [
@@ -33,6 +34,7 @@ const routes = [
       { path: 'edit-policy/:id', element: <EditPolicyView /> },
       { path: 'add-policy', element: <AddPolicyView /> },
       { path: 'payments', element: <PaymentView /> },
+      { path: 'pwd-update', element: <UpdatePasswordVeiw /> },
       { path: '*', element: <Navigate replace={false} to="/404" /> }
     ]
   },
