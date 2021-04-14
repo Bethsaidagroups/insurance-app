@@ -51,8 +51,8 @@ class Dashboard extends React.Component{
     }
   }
 
-  componentDidMount999(){
-    makeRequest(this.props).get('/report/dashboard')
+  componentDidMount(){
+    makeRequest(this.props).get('/dashboard')
     .then(response => {
       this.setState({data: response.data.data})
     })
@@ -98,7 +98,7 @@ class Dashboard extends React.Component{
               xl={3}
               xs={12}
             >
-              <Budget data={this.state.data.total_drink_amount + this.state.data.total_food_amount} />
+              <Budget data={this.state.data.total_premium} />
             </Grid>
             <Grid
               item
@@ -107,7 +107,7 @@ class Dashboard extends React.Component{
               xl={3}
               xs={12}
             >
-              <TotalCustomers data={this.state.data.total_reservations} />
+              <TotalCustomers data={this.state.data.total_customer} />
             </Grid>
             <Grid
               item
@@ -116,7 +116,7 @@ class Dashboard extends React.Component{
               xl={3}
               xs={12}
             >
-              <TasksProgress data={this.state.data.total_food_count + this.state.data.total_drink_count} />
+              <TasksProgress data={this.state.data.total_policy} />
             </Grid>
           </Grid>
         </Container>

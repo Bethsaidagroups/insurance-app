@@ -19,7 +19,9 @@ import { Edit as EditIcon,
     PersonAdd,
     Print,
     Commute,
-    Delete
+    Delete,
+    GamepadOutlined,
+    History
 } from '@material-ui/icons'
 import { 
     TableRow,
@@ -49,6 +51,7 @@ import qs from 'qs'
 import moment from 'moment'
 import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
 import PrintTemplate from './SchedulePrintTemplate'
+import PaymentPrintTemplate from './PaymentHistroyTemplate'
 
 const useStyles = createStyles( theme => ({
     root: {
@@ -99,6 +102,7 @@ class Policy extends React.Component {
                 {label:'Premium'},
                 {label:'Start Date'},
                 {label:'Period'},
+                {label:'Frequency'},
                 {label:'Status'},
                 {label:'Date Added'},
                 {label:'Action'}
@@ -117,7 +121,10 @@ class Policy extends React.Component {
             filters: null,
             openPrint: false,
             isLoadingPrint: false,
-            policyData:null
+            openPaymentPrint: false,
+            isLoadingPaymentPrint: false,
+            policyData:null,
+            paymentData:null,
         }
     }
     
@@ -254,6 +261,25 @@ class Policy extends React.Component {
         })
     }
 
+    printPaymentHistory = (policy_no) => {
+        this.setState({openPaymentPrint:true, isLoadingPaymentPrint:true})
+        makeRequest(this.props).post('/policy/payment', qs.stringify({policy_no:policy_no}))
+        .then(response => {
+            this.setState({paymentData:response.data.data, isLoadingPaymentPrint:false})
+        })
+        .catch(error => {
+            handleError({
+                error: error,
+                callbacks: {
+                400: response=>{ this.props.enqueueSnackbar(response.data.message, {variant: "error"}); }
+                }
+            }, this.props);
+        })
+        .finally(() => {
+            //Do nothing
+        })
+    }
+
     render(){
         return(
             <Page
@@ -273,6 +299,28 @@ class Policy extends React.Component {
                     </DialogContent>
                     <DialogActions>
                         <ReactToPrint content={() => this.componentRef}>
+                            <PrintContextConsumer>
+                                {({ handlePrint }) => (
+                                    <Button  onClick={handlePrint} variant="contained" color="primary">Print</Button>
+                                )}
+                            </PrintContextConsumer>
+                        </ReactToPrint>
+                    </DialogActions>
+                </Dialog>
+
+
+                <Dialog open={this.state.openPaymentPrint} maxWidth="md" fullWidth onClose={e=>this.setState({openPaymentPrint:false})}>
+                    <DialogTitle>Payment History</DialogTitle>
+                    <DialogContent>
+                        {this.state.isLoadingPaymentPrint ? (
+                                <CircularProgress size={30}/>
+                            ) : (
+                                <PaymentPrintTemplate data={this.state.paymentData} ref={el => (this.componentRefP = el)}/>
+                            ) 
+                        }
+                    </DialogContent>
+                    <DialogActions>
+                        <ReactToPrint content={() => this.componentRefP}>
                             <PrintContextConsumer>
                                 {({ handlePrint }) => (
                                     <Button  onClick={handlePrint} variant="contained" color="primary">Print</Button>
@@ -316,17 +364,22 @@ class Policy extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {row.premium}
+                                                &#8358;{parseFloat(row.premium).toLocaleString({minimumFractionDigits:2})}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {row.start_date}
+                                                {moment(row.start_date).format("Do MMMM, YYYY")}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
                                                 {row.period > 1 ? `${row.period} Years` : `${row.period} Year`}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Typography className={this.props.classes.typo} style={{textTransform:"capitalize"}}>
+                                                {row.frequency ? row.frequency : "Monthly" }
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
@@ -336,7 +389,7 @@ class Policy extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {moment(row.date_added).fromNow()}
+                                                {moment(row.date_added).format("Do MMMM, YYYY")}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
@@ -350,6 +403,11 @@ class Policy extends React.Component {
                                                     icon={<Delete color="primary"/>} 
                                                     text="Delete" 
                                                     disabled
+                                                />
+                                                <IconMenuItem 
+                                                    icon={<History color="primary"/>} 
+                                                    text="Payment History" 
+                                                    onClick={e=>this.printPaymentHistory(row.policy_no)}
                                                 />
                                                 <IconMenuItem 
                                                     icon={<Print color="primary"/>} 

@@ -11,7 +11,8 @@ import {
   makeStyles,
   colors
 } from '@material-ui/core';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import Book from '@material-ui/icons/Book';
+import { AvTimer } from '@material-ui/icons';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -55,7 +56,7 @@ const TotalProfit = ({ className,data, ...rest }) => {
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <AttachMoneyIcon />
+              <Book />
             </Avatar>
           </Grid>
         </Grid>

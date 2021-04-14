@@ -145,7 +145,7 @@ class ReceiptPrintTemplate extends Component
 
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>The Sum of: </Typography>
-                            <Typography className={this.props.classes.text1}>&#8358;{parseFloat(this.props.data.details.amount).toLocaleString()} Naira Only</Typography>
+                            <Typography className={this.props.classes.text1}>&#8358;{parseFloat(this.props.data.details.amount).toLocaleString({minimumFractionDigits:2})} Naira Only</Typography>
                         </Box>
 
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>

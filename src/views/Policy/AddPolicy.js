@@ -53,6 +53,7 @@ class AddPolicy extends React.Component{
         sum_assured: 0,
         premium: null,
         period: 1,
+        frequency: "monthly",
         start_date: null,
         beneficiary: [{full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""}],
         policies: [],
@@ -80,6 +81,7 @@ class AddPolicy extends React.Component{
                 sum_assured: this.state.sum_assured,
                 premium: this.state.premium,
                 period: this.state.period,
+                frequency: this.state.frequency,
                 start_date: this.state.start_date,
                 beneficiary: this.state.beneficiary
             }))
@@ -117,6 +119,7 @@ class AddPolicy extends React.Component{
         sum_assured: 0,
         premium: "",
         period: 1,
+        freqency: "monthly",
         start_date: "",
         beneficiary: [{full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""}],
       })
@@ -306,6 +309,24 @@ ctrlBeneficiaryRow = (type) =>{
                                 <MenuItem value="3">3 Years</MenuItem>
                                 <MenuItem value="4">4 Years</MenuItem>
                                 <MenuItem value="5">5 Years</MenuItem>
+                                <MenuItem value="6">6 Years</MenuItem>
+                            </TextField>
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                label="Frequency"
+                                name="frequency"
+                                value={this.state.frequency}
+                                onChange={this.onChange}
+                                select
+                            >
+                                <MenuItem value="monthly">Monthly</MenuItem>
+                                <MenuItem disabled value="quarterly">Quarterly</MenuItem>
+                                <MenuItem disabled value="semiannualy">Semiannualy</MenuItem>
+                                <MenuItem disabled value="annualy">Annualy</MenuItem>
                             </TextField>
                         </Grid>
 

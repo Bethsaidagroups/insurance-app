@@ -3,8 +3,8 @@ const axiosConfig = {
     // `baseURL` will be prepended to `url` unless `url` is absolute.
     // It can be convenient to set `baseURL` for an instance of axios to pass relative URLs
     // to methods of that instance.
-    baseURL: 'http://localhost/insurance-back/api',
-    //baseURL: 'https://iis-api.bethsaidagroups.org',
+    //baseURL: 'http://localhost/insurance-back/api',
+    baseURL: 'https://iis-api.bethsaidagroups.org',
    
     // `transformRequest` allows changes to the request data before it is sent to the server
     // This is only applicable for request methods 'PUT', 'POST', 'PATCH' and 'DELETE'

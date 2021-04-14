@@ -23,7 +23,10 @@ import {
         tableHeadCell:{
             minWidth: 200
         },
-
+        tableHeadCellPrint: {
+            fontSize: 12,
+            minWidth: 150
+        }
     })
 
 class TableMaker extends Component{
@@ -42,7 +45,8 @@ class TableMaker extends Component{
                                 {this.props.columns.map((column, index)=>(
                                     <TableCell
                                         key={'table-header-cell-'+index}
-                                        align={(index == 0)? "left" : "center"}
+                                        align="left"
+                                        className={this.props.classes.tableHeadCellPrint}
                                     >
                                         {column.label}
                                     </TableCell>
@@ -76,7 +80,8 @@ class TableMaker extends Component{
                                     {this.props.columns.map((column, index)=>(
                                         <TableCell
                                             key={'table-header-cell-'+index}
-                                            align={(index == 0)? "left" : "center"}
+                                            align="left"
+                                            className={this.props.classes.tableHeadCellPrint}
                                         >
                                             {column.label}
                                         </TableCell>

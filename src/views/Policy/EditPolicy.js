@@ -34,6 +34,7 @@ import qs from 'qs'
 import Agent from '../Agent';
 import { Add, Remove, ExpandMore} from '@material-ui/icons';
 import withRouter from 'src/utils/useRouter'
+import moment from 'moment'
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -61,6 +62,7 @@ class AddPolicy extends React.Component{
         sum_assured: 0,
         premium: null,
         period: 1,
+        frequency: "monthly",
         start_date: null,
         beneficiary: [{full_name:"", date_of_birth:"", relationship:"", phone_number:"", ppn:""}],
         policy_no: null,
@@ -90,6 +92,7 @@ class AddPolicy extends React.Component{
                 id:this.props.params.id,
                 customer: this.state.customer,
                 policy: this.state.policy,
+                frequency: this.state.frequency,
                 sum_assured: this.state.sum_assured,
                 premium: this.state.premium,
                 period: this.state.period,
@@ -198,6 +201,7 @@ class AddPolicy extends React.Component{
                 policy: response.data.data.policy.policy_id,
                 premium: response.data.data.policy.premium,
                 period: response.data.data.policy.period,
+                frequency: response.data.data.policy.frequency,
                 start_date: response.data.data.policy.start_date,
                 policy_no: response.data.data.policy.policy_no,
                 beneficiary: JSON.parse(response.data.data.policy.beneficiary),
@@ -360,6 +364,24 @@ ctrlBeneficiaryRow = (type) =>{
                                             <MenuItem value="3">3 Years</MenuItem>
                                             <MenuItem value="4">4 Years</MenuItem>
                                             <MenuItem value="5">5 Years</MenuItem>
+                                            <MenuItem value="6">6 Years</MenuItem>
+                                        </TextField>
+                                    </Grid>
+
+                                    <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+                                        <TextField
+                                            fullWidth
+                                            variant="outlined"
+                                            label="Frequency"
+                                            name="frequency"
+                                            value={this.state.frequency}
+                                            onChange={this.onChange}
+                                            select
+                                        >
+                                            <MenuItem value="monthly">Monthly</MenuItem>
+                                            <MenuItem disabled value="quarterly">Quarterly</MenuItem>
+                                            <MenuItem disabled value="semiannualy">Semiannualy</MenuItem>
+                                            <MenuItem disabled value="annualy">Annualy</MenuItem>
                                         </TextField>
                                     </Grid>
 
@@ -478,15 +500,19 @@ ctrlBeneficiaryRow = (type) =>{
                                                     </Grid>
                                                     <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
                                                         <Typography className={this.props.classes.text}><strong>Commencement Date</strong></Typography>
-                                                        <Typography className={this.props.classes.text}>{log.data.start_date}</Typography>
+                                                        <Typography className={this.props.classes.text}>{moment(log.data.start_date).format("Do MMMM, YYYY")}</Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
                                                         <Typography className={this.props.classes.text}><strong>Premium</strong></Typography>
-                                                        <Typography className={this.props.classes.text}>{log.data.premium}</Typography>
+                                                        <Typography className={this.props.classes.text}>&#8358;{parseFloat(log.data.premium).toLocaleString()}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+                                                        <Typography className={this.props.classes.text}><strong>Frequency</strong></Typography>
+                                                        <Typography className={this.props.classes.text} style={{textTransform:"capitalize"}}>{log.data.frequency}</Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
                                                         <Typography className={this.props.classes.text}><strong>Sum Assured</strong></Typography>
-                                                        <Typography className={this.props.classes.text}>{log.data.policy_details.sum_assured}</Typography>
+                                                        <Typography className={this.props.classes.text}>&#8358;{parseFloat(JSON.parse(log.data.policy_details).sum_assured).toLocaleString()}</Typography>
                                                     </Grid>
                                                 </Grid>
                                               
@@ -500,7 +526,7 @@ ctrlBeneficiaryRow = (type) =>{
                                                             </Grid>
                                                             <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
                                                                 <Typography className={this.props.classes.text}><strong>Date Of Birth</strong></Typography>
-                                                                <Typography className={this.props.classes.text}>{data.date_of_birth}</Typography>
+                                                                <Typography className={this.props.classes.text}>{moment(data.date_of_birth).format("Do MMMM, YYYY")}</Typography>
                                                             </Grid>
                                                             <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
                                                                 <Typography className={this.props.classes.text}><strong>Relationship</strong></Typography>
@@ -517,7 +543,7 @@ ctrlBeneficiaryRow = (type) =>{
                                                         </Grid>
                                                     ))
                                                 }
-                                                <Typography className={this.props.classes.text} style={{marginTop:10}}>Edited By <strong>{log.staff.name}</strong> on <strong>{log.date}</strong></Typography>
+                                                <Typography className={this.props.classes.text} style={{marginTop:10}}>Edited By <strong>{log.staff.name}</strong> on <strong>{moment(log.date).format('MMMM Do YYYY, h:mm:ss a')}</strong></Typography>
                                                 <Divider style={{marginTop:15, marginBottom:15}}/>
                                             </>
                                         ))

@@ -37,7 +37,8 @@ import {
     Grid,
     TextField,
     DialogActions,
-    CircularProgress
+    CircularProgress,
+    MenuItem
 } from '@material-ui/core';
 import { deepOrange } from '@material-ui/core/colors';
 import { withSnackbar } from 'notistack';
@@ -119,8 +120,13 @@ class Customer extends React.Component {
             selectedIndex: null,
             filters: null,
             policy_no: null,
+            policy:null,
             amount: null,
             narration: null,
+            payment_date:null,
+            channel:null,
+            teller_no:null,
+            bank:null,
             isLoadingVerify: false,
             isLoadingPayment: false,
             isLoadingAction: false,
@@ -159,6 +165,20 @@ class Customer extends React.Component {
         else{
             return "inactive";
         }
+    }
+
+    clearFields = ()=>{
+        this.setState({
+            policy_no: "",
+            amount: "",
+            narration: "",
+            payment_date: "",
+            channel: "",
+            period_cover: "",
+            bank: "",
+            teller_no:"",
+            policy:null
+        })
     }
 
     componentDidMount(){
@@ -231,12 +251,17 @@ class Customer extends React.Component {
         makeRequest(this.props).post('/payment/add', qs.stringify({
             policy_no: this.state.policy_no,
             amount: this.state.amount,
-            narration: this.state.narration
+            narration: this.state.narration,
+            payment_date: this.state.payment_date,
+            channel: this.state.channel,
+            period_cover: this.state.period_cover,
+            bank: this.state.bank,
+            teller_no: this.state.teller_no
         }))
         .then(response => {
             this.props.enqueueSnackbar(response.data.message, {variant: "success"});
             this.reload();
-            this.setState({open:false, policy:null})
+            this.clearFields();
         })
         .catch(error => {
             handleError({
@@ -368,30 +393,94 @@ class Customer extends React.Component {
                                         <Typography style={{fontSize:12}}>Policy Name: {this.state.policy.policy.name}</Typography>
                                         <Typography style={{fontSize:12}}>Name:  {this.state.policy.customer.surname} {this.state.policy.customer.first_name} {this.state.policy.customer.other_name}</Typography>
                                         <Typography style={{fontSize:12}}>Premium: &#8358;{parseFloat(this.state.policy.premium).toLocaleString()}</Typography>
-
+                                        <Grid container spacing={2} style={{marginTop: 20}}>
                                         {
                                             (this.state.policy.policy.type != "one-off") ? (
-                                                <TextField
-                                                    style={{marginTop:10, marginBottom:15}}
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    label="Amount"
-                                                    name="amount"
-                                                    value={this.state.amount}
-                                                    onChange={e => this.setState({amount:e.target.value})}
-                                                />
+                                                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            label="Amount"
+                                                            name="amount"
+                                                            value={this.state.amount}
+                                                            onChange={e => this.setState({amount:e.target.value})}
+                                                        />
+                                                    </Grid>
                                             ) : (
                                                 null
                                             )
                                         }
-                                        <TextField
-                                            fullWidth
-                                            variant="outlined"
-                                            label="Payment Narration"
-                                            name="narration"
-                                            value={this.state.narration}
-                                            onChange={e => this.setState({narration:e.target.value})}
-                                        />
+                                        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            label="Payment Date"
+                                                            name="payment_date"
+                                                            value={this.state.payment_date}
+                                                            type="date"
+                                                            onChange={e => this.setState({payment_date:e.target.value})}
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            label="Period Coverage"
+                                                            name="period_cover"
+                                                            value={this.state.period_cover}
+                                                            helperText="Use this format: January 10, 2021 - February 10, 2021"
+                                                            onChange={e => this.setState({period_cover:e.target.value})}
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            label="Payment Channel"
+                                                            name="channel"
+                                                            value={this.state.channel}
+                                                            onChange={e => this.setState({channel:e.target.value})}
+                                                            select
+                                                        >
+                                                            <MenuItem value="cash">Cash</MenuItem>
+                                                            <MenuItem value="transfer">Transfer</MenuItem>
+                                                            <MenuItem value="cheque">Cheque</MenuItem>
+                                                        </TextField>
+                                                    </Grid>
+
+                                                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            label="Teller No"
+                                                            name="teller_no"
+                                                            value={this.state.teller_no}
+                                                            onChange={e => this.setState({teller_no:e.target.value})}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            label="Payment Narration"
+                                                            name="narration"
+                                                            value={this.state.narration}
+                                                            onChange={e => this.setState({narration:e.target.value})}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            label="Bank"
+                                                            name="bank"
+                                                            value={this.state.bank}
+                                                            onChange={e => this.setState({bank:e.target.value})}
+                                                        />
+                                                    </Grid>
+                                                </Grid>
                                     </Box>
                                 ) : (
                                     null
@@ -426,7 +515,7 @@ class Customer extends React.Component {
                                 <>
                                     <Button  
                                         className={this.props.classes.buttonCancel} 
-                                        onClick={()=>this.setState({open:false, policy:null, policy_no:""})}
+                                        onClick={()=>{this.clearFields();this.setState({open:false})}}
                                         variant="outlined"
                                         disableElevation
                                     >
@@ -504,7 +593,7 @@ class Customer extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {row.amount}
+                                                &#8358;{parseFloat(row.amount).toLocaleString({minimumFractionDigits:2})}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
@@ -531,7 +620,7 @@ class Customer extends React.Component {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>
-                                                {moment(row.datetime).fromNow()}
+                                                {moment(row.datetime).format("Do MMMM, YYYY")}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">

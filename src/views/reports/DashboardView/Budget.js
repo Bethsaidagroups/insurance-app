@@ -54,7 +54,7 @@ const Budget = ({ className, data, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              TOTAL POLICIES
+              TOTAL PREMIUM
             </Typography>
             <Typography
               color="textPrimary"
@@ -85,7 +85,7 @@ const Budget = ({ className, data, ...rest }) => {
             color="textSecondary"
             variant="caption"
           >
-            Since last month
+            This month
           </Typography>
         </Box>
       </CardContent>
