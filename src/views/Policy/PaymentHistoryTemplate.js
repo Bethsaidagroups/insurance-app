@@ -132,7 +132,7 @@ class ReceiptPrintTemplate extends Component
                         <Typography style={{color:grey[600], fontSize:13}}>Bethsaida Place, 31, Afolabi Aina Street, (Royal Bed Estate)</Typography>
                         <Typography style={{color:grey[600], fontSize:13}}>off Allen Avenue, before new Alade Market, Ikeja Lagos State</Typography>
                         <Typography style={{color:grey[600], fontSize:13}}>Tel: 08053645100</Typography>
-                        <Typography style={{color:grey[600], fontSize:13}}>Email: info@bethsaidainsltd.com</Typography>
+                        <Typography style={{color:grey[600], fontSize:13}}>Email: info@bethsaidamicroinsltd.com</Typography>
                     </Box>
                 </Box>
                 <Divider style={{marginTop:15, marginBottom:15}}/>
@@ -145,8 +145,8 @@ class ReceiptPrintTemplate extends Component
                         </Typography>
                         <Typography style={{color:grey[600], fontSize:12, marginBottom:5}}><strong>Address:</strong> {this.props.data.policy_data.customer.address}</Typography>
                         <Typography style={{color:grey[600], fontSize:12, marginBottom:5}}><strong>Commencement Date:</strong> {moment(this.props.data.policy_data.start_date).format("MMMM Do YYYY")}</Typography>
-                        <Typography style={{color:grey[600], fontSize:12, marginBottom:5}}><strong>Frequency: </strong> {this.props.data.policy_data.frequency ? this.props.data.policy_data.frequency : "Monthly"}</Typography>
-                        <Typography style={{color:grey[600], fontSize:12, marginBottom:5}}><strong>Policy Status: </strong> {this.props.data.policy_data.status}</Typography>
+                        <Typography style={{color:grey[600], fontSize:12, marginBottom:5, textTransform:"capitalize"}}><strong>Frequency: </strong> {this.props.data.policy_data.frequency ? this.props.data.policy_data.frequency : "Monthly"}</Typography>
+                        <Typography style={{color:grey[600], fontSize:12, marginBottom:5, textTransform:"capitalize"}}><strong>Policy Status: </strong> {this.props.data.policy_data.status}</Typography>
                         <Typography style={{color:grey[600], fontSize:12, marginBottom:5}}><strong>Email: </strong> {this.props.data.policy_data.customer.email}</Typography>
                     </Box>
                     <Box >
@@ -185,8 +185,8 @@ class ReceiptPrintTemplate extends Component
                     </Box>
                     <Box>
                         <Typography style={{marginTop:10, fontSize:12, color:red[700]}}>
-                            *Kindly reconcile the above statement of account on your policy. Of there is any payment not not reflecting
-                            above, kindly supply us with details of the such payment so as to assist us to reconcile your payment records rightly
+                            *Kindly reconcile the above statement of account on your policy. If there is any payment not reflecting
+                            above, kindly supply us with details of such payment so as to assist us to reconcile your payment records rightly
                         </Typography>
                         <Typography style={{marginTop:10, fontSize:12, color:red[700]}}>
                             Thank You

@@ -51,7 +51,7 @@ import qs from 'qs'
 import moment from 'moment'
 import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
 import PrintTemplate from './SchedulePrintTemplate'
-import PaymentPrintTemplate from './PaymentHistroyTemplate'
+import PaymentPrintTemplate from './PaymentHistoryTemplate'
 
 const useStyles = createStyles( theme => ({
     root: {

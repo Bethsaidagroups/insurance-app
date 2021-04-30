@@ -109,14 +109,14 @@ class ReceiptPrintTemplate extends Component
                         <Typography style={{color:grey[600], fontSize:13}}>Bethsaida Place, 31, Afolabi Aina Street, (Royal Bed Estate)</Typography>
                         <Typography style={{color:grey[600], fontSize:13}}>off Allen Avenue, before new Alade Market, Ikeja Lagos State</Typography>
                         <Typography style={{color:grey[600], fontSize:13}}>Tel: 08053645100</Typography>
-                        <Typography style={{color:grey[600], fontSize:13}}>Email: info@bethsaidainsltd.com</Typography>
+                        <Typography style={{color:grey[600], fontSize:13}}>Email: info@bethsaidamicroinsltd.com</Typography>
                     </Box>
                 </Box>
                 <Divider style={{marginTop:15, marginBottom:15}}/>
                 <Box>
                     <Box style={{marginTop: 20}}>
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
-                            <Typography className={this.props.classes.title}>Receive with thanks from: </Typography>
+                            <Typography className={this.props.classes.title}>Received with thanks from: </Typography>
                             <Typography className={this.props.classes.text}>
                                 {`${this.props.data.details.customer.surname} ${this.props.data.details.customer.first_name} ${this.props.data.details.customer.other_name}`}
                             </Typography>
@@ -129,7 +129,7 @@ class ReceiptPrintTemplate extends Component
 
                         <Box display="flex" fexDireection="column" justifyContent="space-between" style={{marginBottom: 5}}>
                             <Typography className={this.props.classes.title}>Date: </Typography>
-                            <Typography className={this.props.classes.text}>{moment(this.props.data.details.datetime).format("Do MMMM, YYYY")}</Typography>
+                            <Typography className={this.props.classes.text}>{moment(this.props.data.details.payment_date).format("Do MMMM, YYYY")}</Typography>
                         </Box>
                     </Box>
                 </Box>

@@ -26,6 +26,10 @@ import {
         tableHeadCellPrint: {
             fontSize: 12,
             minWidth: 150
+        },
+        tableHeadCellPrintComm: {
+            fontSize: 10,
+            padding: 0
         }
     })
 
@@ -46,7 +50,7 @@ class TableMaker extends Component{
                                     <TableCell
                                         key={'table-header-cell-'+index}
                                         align="left"
-                                        className={this.props.classes.tableHeadCellPrint}
+                                        className={this.props.printComm ? this.props.classes.tableHeadCellPrintComm : this.props.classes.tableHeadCellPrint}
                                     >
                                         {column.label}
                                     </TableCell>
@@ -81,7 +85,7 @@ class TableMaker extends Component{
                                         <TableCell
                                             key={'table-header-cell-'+index}
                                             align="left"
-                                            className={this.props.classes.tableHeadCellPrint}
+                                            className={this.props.printComm ? this.props.classes.tableHeadCellPrintComm : this.props.classes.tableHeadCellPrint}
                                         >
                                             {column.label}
                                         </TableCell>

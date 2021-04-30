@@ -20,7 +20,8 @@ import {
   Briefcase,
   Users,
   UserCheck,
-  Clock
+  Clock,
+  Folder
 } from 'react-feather';
 import NavItem from './NavItem';
 import {connect} from 'react-redux'
@@ -55,6 +56,11 @@ const items = [
     href: '/app/payments',
     icon: Clock,
     title: 'Payments'
+  },
+  {
+    href: '/app/commission',
+    icon: Folder,
+    title: 'Commission Statement'
   },
 ];
 

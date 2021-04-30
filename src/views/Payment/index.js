@@ -101,6 +101,7 @@ class Customer extends React.Component {
                 {label:'Reference'},
                 {label:'Amount'},
                 {label:'Status'},
+                {label:'Payment Date'},
                 {label:'Initialized By'},
                 {label:'Approved By'},
                 {label:'Narration'},
@@ -426,7 +427,7 @@ class Customer extends React.Component {
                                                         <TextField
                                                             fullWidth
                                                             variant="outlined"
-                                                            label="Period Coverage"
+                                                            label="Period Cover"
                                                             name="period_cover"
                                                             value={this.state.period_cover}
                                                             helperText="Use this format: January 10, 2021 - February 10, 2021"
@@ -602,6 +603,11 @@ class Customer extends React.Component {
                                             > 
                                                 {row.status} 
                                             </StatusBadge>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Typography className={this.props.classes.typo}>
+                                                {moment(row.payment_date).format("Do MMMM, YYYY")}
+                                            </Typography>
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography className={this.props.classes.typo}>

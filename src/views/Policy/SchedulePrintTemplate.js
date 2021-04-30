@@ -114,7 +114,7 @@ class ReceiptPrintTemplate extends Component
                         <Typography style={{color:grey[600], fontSize:13}}>Bethsaida Place, 31, Afolabi Aina Street, (Royal Bed Estate)</Typography>
                         <Typography style={{color:grey[600], fontSize:13}}>off Allen Avenue, before new Alade Market, Ikeja Lagos State</Typography>
                         <Typography style={{color:grey[600], fontSize:13}}>Tel: 08053645100</Typography>
-                        <Typography style={{color:grey[600], fontSize:13}}>Email: info@bethsaidainsltd.com</Typography>
+                        <Typography style={{color:grey[600], fontSize:13}}>Email: info@bethsaidamicroinsltd.com</Typography>
                     </Box>
                 </Box>
                 <Divider style={{marginTop:15, marginBottom:15}}/>
